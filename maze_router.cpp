@@ -1,6 +1,7 @@
 #include<iostream>
+#include "Graph.h"
 using namespace std;
-
+#define SIZE 20000
 
 /*
     This function takes a coordinate pair of X,Y in the grid (this will be input from the user and we need to convert it work on our graph)
@@ -44,14 +45,81 @@ void take_node_return_pair(int num, int &X, int &Y, int &layer){
 
 }
 
-int main(){
 /*
-    int X, Y, layer = 0;
-    take_node_return_pair(9999, X, Y, layer);
-    cout << "X: " << X << endl << "Y: " << Y << endl << "layer: " << layer << endl;
+    Function
+    Input: takes the source node 
+    It traverses the other nodes in the graph and set the costs on them
 */
-    int X = 2;
-    int Y = 1;
+
+void establish_cost_network(Graph grid_network){
+    for(int node = 0;node<20000;node++){
+        
+    for (int i = 0; i < SIZE; i++){
+    //cout << "INSIDE LOOP: " << i << endl;
+        if (node < 10000){
+            if ((!(node % 99 == 0)) || node == 0){
+                grid_network.addCostedEdge(node, node+1, 1);
+            }
+            if (!(node % 100 == 0)){
+                grid_network.addCostedEdge(node, node-1, 1);
+            }
+            if (node < 9900){
+                grid_network.addCostedEdge(node, node+100, 10);
+            }
+            if (node < 99){
+                grid_network.addCostedEdge(node, node-100, 10);
+            }   
+            grid_network.addCostedEdge(node, node+10000, 10);
+
+        } else if (node >= 10000){
+            if (!(node % 99 == 0)){
+                grid_network.addCostedEdge(node, node+1, 10);
+            }
+            if (!(node % 100 == 0)){
+                grid_network.addCostedEdge(node, node-1, 10);
+            }
+            if (node < 10099) {            
+                grid_network.addCostedEdge(node, node-100, 1);
+            }
+            if (node < 19900){
+                grid_network.addCostedEdge(node, node+100, 1);
+            }
+            
+
+
+            grid_network.addCostedEdge(node, node-10000, 10);
+        }
+     }
     
-    cout << take_pair_return_node(X, Y);
+}}
+
+
+int main(){
+
+   
+       	//take the input from the user [source, target]
+
+    cout << "Enter the source coordinates: " << endl;
+    int x,y;
+    cin >> x;
+    cin >> y;
+
+    int source_node = take_pair_return_node(x,y);    
+
+
+    cout << "Enter the target coordinates: " << endl;
+    
+    cin >> x;
+    cin >> y;
+
+    int target_node = take_pair_return_node(x,y);    
+
+
+    cout << "src: " << source_node << endl << "dest: " << target_node << endl;
+
+//Create Graph [20000 = (100 * 100) * 2]
+    Graph grid_network(SIZE);
+    establish_cost_network(grid_network);
+    //grid_network.addCostedEdge(1,0, 10);
+    grid_network.printWithCosts();
 }
